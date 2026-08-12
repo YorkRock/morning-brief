@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>米国市場モーニングブリーフ · 2026年8月13日</title>
+<style>
+  :root{
+    --bg:#FCFCFB; --wash:#F9F9F7; --ink:#2E2C27; --ink-soft:#6B6A63;
+    --ink-grey:#B4B3A8; --hairline:#E4E3DC; --clay:#C6613F; --edge:#E1E1DF;
+    --up:#2E6E4E; --down:#A84632;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Hiragino Kaku Gothic ProN","Yu Gothic UI",sans-serif;
+    font-size:16px;line-height:1.85;}
+  .band-top{background:var(--wash);border-bottom:1px solid var(--edge);}
+  .inner{max-width:860px;margin:0 auto;padding:56px 32px 40px;}
+  .band-bottom .inner{padding-top:44px;padding-bottom:80px;}
+  .daydate{font-size:13px;color:var(--ink-soft);letter-spacing:.06em;margin-bottom:14px;}
+  h1{font-family:"Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",Georgia,serif;
+    font-weight:600;font-size:34px;line-height:1.5;letter-spacing:.01em;margin-bottom:28px;}
+  /* audio player */
+  .player{border:1px solid var(--hairline);background:var(--bg);padding:18px 20px;margin-bottom:34px;}
+  .player-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .pbtn{border:1px solid var(--ink);background:none;color:var(--ink);cursor:pointer;
+    font-size:14px;padding:8px 22px;font-family:inherit;letter-spacing:.05em;}
+  .pbtn:hover{background:var(--ink);color:var(--bg);}
+  .pbtn:disabled{border-color:var(--ink-grey);color:var(--ink-grey);cursor:default;background:none;}
+  .player select{border:1px solid var(--hairline);background:var(--bg);color:var(--ink-soft);
+    font-size:13px;padding:7px 8px;font-family:inherit;max-width:200px;}
+  .player-meta{font-size:13px;color:var(--ink-soft);}
+  .pbar{height:2px;background:var(--hairline);margin-top:14px;position:relative;}
+  .pbar-fill{height:2px;background:var(--clay);width:0%;transition:width .4s;}
+  .now-reading{font-size:13px;color:var(--ink-soft);margin-top:10px;min-height:1.6em;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .player-note{font-size:12px;color:var(--ink-grey);margin-top:8px;}
+  /* market tiles */
+  .tiles{display:grid;grid-template-columns:repeat(6,1fr);border-top:1px solid var(--hairline);
+    border-left:1px solid var(--hairline);}
+  .tile{border-right:1px solid var(--hairline);border-bottom:1px solid var(--hairline);
+    padding:14px 14px 12px;}
+  .tile .k{font-size:12px;color:var(--ink-soft);letter-spacing:.04em;}
+  .tile .v{font-size:19px;font-weight:600;letter-spacing:.01em;margin-top:2px;}
+  .tile .d{font-size:13px;margin-top:1px;}
+  .up{color:var(--up);} .down{color:var(--down);} .flat{color:var(--ink-soft);}
+  /* sections */
+  h2{font-size:14px;font-weight:600;letter-spacing:.12em;color:var(--ink);
+    margin:52px 0 20px;text-transform:uppercase;}
+  h2:first-child{margin-top:0;}
+  .lead3 p{padding-left:34px;position:relative;margin-bottom:14px;color:var(--ink);}
+  .lead3 p .n{position:absolute;left:0;top:0;color:var(--ink-grey);font-size:15px;}
+  .story{margin-bottom:44px;}
+  .story h3{font-size:19px;font-weight:600;line-height:1.6;margin-bottom:10px;}
+  .story h3 a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--ink-grey);}
+  .story h3 a:hover{border-bottom-color:var(--ink);}
+  .story .fact{color:var(--ink);margin-bottom:10px;}
+  .tag{font-size:12px;letter-spacing:.1em;color:var(--clay);display:block;margin-bottom:2px;}
+  .story .sub{color:var(--ink-soft);margin-bottom:10px;}
+  .links li{list-style:none;padding-left:34px;position:relative;margin-bottom:16px;}
+  .links li .n{position:absolute;left:0;top:0;color:var(--ink-grey);font-size:15px;}
+  .links a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--ink-grey);font-weight:600;}
+  .links a:hover{border-bottom-color:var(--ink);}
+  .links .why{color:var(--ink-soft);font-size:15px;}
+  .ahead p{color:var(--ink-soft);margin-bottom:10px;}
+  .srcnote{margin-top:56px;padding-top:18px;border-top:1px solid var(--hairline);
+    font-size:12.5px;color:var(--ink-grey);line-height:1.9;}
+  .srcnote a{color:var(--ink-grey);}
+  @media(max-width:640px){
+    .inner{padding:40px 20px 32px;}
+    h1{font-size:25px;}
+    .tiles{grid-template-columns:repeat(2,1fr);}
+  }
+</style>
+</head>
+<body>
+
+<div class="band-top"><div class="inner">
+  <div class="daydate">2026年8月13日(木)· 米国 8月12日(水)引け · 東京 6:00</div>
+  <h1>CPIは静かに通過、S&amp;P500は最高値まであと10ポイント。火種は原油に残る。</h1>
+
+  <div class="player">
+    <div class="player-row">
+      <button class="pbtn" id="btnPlay">▶ 再生</button>
+      <button class="pbtn" id="btnStop" disabled>■ 停止</button>
+      <select id="selRate">
+        <option value="0.9">0.9x</option>
+        <option value="1" selected>1.0x 標準</option>
+        <option value="1.2">1.2x</option>
+        <option value="1.5">1.5x</option>
+      </select>
+      <select id="selVoice"></select>
+      <input id="xiKey" type="password" placeholder="ElevenLabs APIキーを貼り付け" style="border:1px solid var(--hairline);background:var(--bg);color:var(--ink);font-size:13px;padding:7px 8px;font-family:inherit;width:230px;">
+      <span class="player-meta" id="meta">音声ブリーフ · 約10分 · ElevenLabs</span>
+    </div>
+    <div class="pbar"><div class="pbar-fill" id="fill"></div></div>
+    <div class="now-reading" id="now"></div>
+    <div class="player-note">再生ボタンでElevenLabsが音声を生成します(初回は数秒待ち)。APIキーはブックマークURLの#k=以降(サーバーに送信されない)か、貼り付け欄から読み込みます。ページには保存されません。</div>
+  </div>
+
+  <div class="tiles">
+    <div class="tile"><div class="k">S&amp;P 500</div><div class="v">7,747.46</div><div class="d up">+0.25%</div></div>
+    <div class="tile"><div class="k">ナスダック総合</div><div class="v">26,596.09</div><div class="d up">+0.57%</div></div>
+    <div class="tile"><div class="k">ダウ平均</div><div class="v">—</div><div class="d up">+0.11%</div></div>
+    <div class="tile"><div class="k">ラッセル2000</div><div class="v">—</div><div class="d up">+0.32%</div></div>
+    <div class="tile"><div class="k">ドル円</div><div class="v">159.2</div><div class="d flat">-0.04%</div></div>
+    <div class="tile"><div class="k">ブレント原油</div><div class="v">$90付近</div><div class="d down">上昇圧力</div></div>
+  </div>
+</div></div>
+
+<div class="band-bottom"><div class="inner">
+
+  <h2>今朝の3行</h2>
+  <div class="lead3">
+    <p><span class="n">1</span>7月CPIは前月比+0.1%・前年比3.4%と予想通りに鈍化。9月FOMCの「利上げ」観測が後退し、株式は続伸。S&amp;P500は史上最高値(8/7の7,757.64)まであと10ポイント。</p>
+    <p><span class="n">2</span>AIインフラ決算が絶好調。CoreWeave +18%、Nebius +16.5%、SMCI +9%。引け後のシスコは売上+18%・AI受注累計93億ドルで、来期ガイダンスも強気。</p>
+    <p><span class="n">3</span>ホルムズ海峡を巡る米イラン交渉は膠着し、ブレント原油は90ドルに接近。「インフレ鈍化シナリオ」を壊しうる唯一にして最大のリスク。</p>
+  </div>
+
+  <h2>厳選ニュース解説</h2>
+
+  <div class="story">
+    <h3><a href="https://www.cnbc.com/2026/08/12/cpi-inflation-report-july-2026.html">① 7月CPI 3.4%——市場が賭けているのは「利下げ」ではなく「利上げ回避」</a></h3>
+    <p class="fact">7月の消費者物価指数は前月比+0.1%、前年比3.4%(6月は3.5%)。コアは+0.2%・2.5%で、すべて市場予想に一致した。発表後、株は買われ、9月の利上げ確率は発表前のほぼ50:50から「据え置き優位」に傾いた。</p>
+    <span class="tag">背景</span>
+    <p class="sub">2026年のFRBを巡る議論は、多くの人の直感と逆で「いつ利下げするか」ではなく「利上げが必要か」だ。中東情勢によるエネルギー高が春のインフレを再加速させ、タカ派は追加引き締めを主張してきた。一方で7月の雇用関連データは弱く(人員削減の増加)、締めすぎれば景気を壊すというジレンマにある。</p>
+    <span class="tag">含意</span>
+    <p class="sub">「予想通り」であること自体が最大の安心材料だった。LPLファイナンシャルは年末までに2.7%への減速を予想する。ただしコア2.5%は目標2%より上にあり、原油90ドルが8月分CPIに乗り始めると、この安堵は一ヶ月で巻き戻される可能性がある。</p>
+  </div>
+
+  <div class="story">
+    <h3><a href="https://www.aljazeera.com/economy/2026/8/10/oil-prices-climb-as-iranian-demands-cloud-outlook-for-strait-of-hormuz">② ホルムズ海峡の膠着——原油90ドルは「次のCPI」への時限装置</a></h3>
+    <p class="fact">米イランの海峡通航を巡る合意観測が後退。米側の封鎖ラインではパナマ船籍タンカーへの発砲事案も発生し、ブレント原油は90ドルに接近した(火曜は+1.6%)。</p>
+    <span class="tag">背景</span>
+    <p class="sub">今年の対イラン軍事衝突以降、世界の海上輸送原油の約2割が通るこの隘路は正常に機能していない。3月にはイランの封鎖で原油が100ドルを突破した経緯があり、市場は「再現」を警戒している。代替パイプラインの容量は限られ、迂回は構造的に難しい。</p>
+    <span class="tag">含意</span>
+    <p class="sub">エネルギーはCPIの最大の変数。90ドルが定着すれば「3%台前半で頭打ち」のシナリオが崩れ、9月利上げ論が再燃しうる。日本から見れば、原油高は円安と輸入物価の二重経路で効く。今朝いちばん監視価値のある価格はS&amp;P500ではなくブレントだ。</p>
+  </div>
+
+  <div class="story">
+    <h3><a href="https://finance.yahoo.com/technology/ai/articles/riot-platforms-soars-17-9-130537358.html">③ 「ネオクラウド」決算ラッシュ——AI投資の主役が半導体から電力・容量へ</a></h3>
+    <p class="fact">CoreWeaveは赤字縮小と売上達成で+18%、NebiusはAIインフラ需要で売上5.82億ドルとなり+16.5%、SMCIも+9%。前日にはビットコイン採掘大手Riot PlatformsがAnthropicと91億ドルのデータセンター契約を結び+17%と急騰した。</p>
+    <span class="tag">背景</span>
+    <p class="sub">AI計算需要のボトルネックはGPUそのものから「電力・土地・冷却」に移った。電力容量を確保済みのマイニング企業がAIデータセンターへ転用する動きが加速し、GPUを貸すネオクラウド勢がハイパースケーラーの容量不足を埋めている。</p>
+    <span class="tag">含意</span>
+    <p class="sub">AI投資サイクルは終わるどころか、半導体からその周辺(電力・データセンター・ネットワーク機器)へ拡散している。この裾野の広がりが続く限り、AI関連の調整は「テーマの終わり」ではなく「テーマ内の資金回転」と読むのが妥当だ。</p>
+  </div>
+
+  <div class="story">
+    <h3><a href="https://www.streetinsider.com/PRNewswire/CISCO+REPORTS+FOURTH+QUARTER+AND+FISCAL+YEAR+2026+EARNINGS/26912724.html">④ シスコ決算(引け後)——AI受注93億ドルが示す「設備投資は2027年も減速しない」</a></h3>
+    <p class="fact">Q4売上は173億ドル(+18%)、非GAAP EPSは1.22ドル。FY26のAIインフラ受注は累計93億ドルに達し、FY27にはAIから約75億ドルの売上を見込む。FY27通期ガイダンスは売上722〜734億ドルと強気。ネットワーキング受注はQ4に+40%で、8四半期連続の2桁成長。</p>
+    <span class="tag">背景</span>
+    <p class="sub">シスコは「AIはGPUだけでは動かない」ことの代表的な受益者だ。データセンター内部を繋ぐスイッチ・ルーター需要が急増し、株価は年初来+61%と、地味な老舗が今年のAI銘柄の一角に変貌している。</p>
+    <span class="tag">含意</span>
+    <p class="sub">経営者が来期ガイダンスで強気を出すのは、顧客のAI設備投資計画が2027年度も衰えないと見ているシグナル。AIネットワーキングがNvidia/Broadcomの独壇場でなくなりつつある点も、競争構造の変化として重要だ。</p>
+  </div>
+
+  <div class="story">
+    <h3><a href="https://finance.yahoo.com/technology/ai/articles/alphabet-stock-falls-report-gemini-184859374.html">⑤ Alphabet——Gemini 3.5 Pro遅延報道で時価総額2,000億ドルが消えた</a></h3>
+    <p class="fact">BloombergがGoogleの次期主力AIモデル「Gemini 3.5 Pro」の開発遅延(特にコーディング性能の改善が不発)を報道。株価は火曜に約4%下落し、時価総額約2,000億ドルが失われた。</p>
+    <span class="tag">背景</span>
+    <p class="sub">OpenAIやMetaとの最前線モデル競争では、数ヶ月の遅延が相対的地位の低下に直結する。検索・YouTube・Maps等の全製品への統合を要する組織の複雑さと、政府とのAI安全基準を巡る協議も開発速度の足かせになっていると報じられた。</p>
+    <span class="tag">含意</span>
+    <p class="sub">来週のAlphabet決算では業績よりも「3.5 Proのタイムライン説明」が最大の焦点になる。一方、同じ日に半導体(Micron +6.9%等)は買われており、市場はAIを見限ったのではなく、テーマ内で勝ち馬を乗り換えているだけだ——ここが2022年型の下落と決定的に違う。</p>
+  </div>
+
+  <h2>WSJ / CNBC PRO — 購読者として今朝読む価値のある記事</h2>
+  <ul class="links">
+    <li><span class="n">1</span><a href="https://www.cnbc.com/2026/08/12/jim-cramer-breaks-down-his-latest-on-nvidias-position-in-the-ai-trade-.html">Cramer: 良好なインフレとネオクラウド決算をどう読むか(CNBC Investing Club)</a><br><span class="why">本日の相場観の代表例。Nvidiaのポジションとネオクラウド決算の位置づけを整理している。</span></li>
+    <li><span class="n">2</span><a href="https://www.cnbc.com/pro/analysis/">CNBC Pro: Markets Analysis(本日の分析一覧)</a><br><span class="why">CPI通過後のセクター別の見方、ストラテジストの9月FOMC予想が集約されている。</span></li>
+    <li><span class="n">3</span><a href="https://www.cnbc.com/pro/analyst-stock-picks/">CNBC Pro: 本日のアナリスト格上げ・格下げ</a><br><span class="why">決算シーズン終盤はレーティング変更が株価に効きやすい局面。</span></li>
+    <li><span class="n">4</span><a href="https://jp.wsj.com/">WSJ日本版トップ——ホルムズ情勢・FRB関連の深掘り</a><br><span class="why">海峡交渉とFRB内のタカ派・ハト派対立は、WSJの取材記事が最も深い領域。</span></li>
+  </ul>
+
+  <h2>この先の注目</h2>
+  <div class="ahead">
+    <p>今週残り、7月PPI(生産者物価)と消費関連指標の発表が続く。CPIが「予想通り」だった分、次の波乱要因はPPIと原油価格に移る。</p>
+    <p>来週はAlphabet決算。Gemini 3.5 Proのタイムライン説明が最大の焦点。</p>
+    <p>為替は159円台。7月末の日米協調介入の効果が半分剥落しており、160円台への再接近は当局の再介入警戒ゾーンに入る。</p>
+  </div>
+
+  <div class="srcnote">
+    出典: <a href="https://finance.yahoo.com/markets/live/stock-market-today-wednesday-august-12-dow-sp-500-nasdaq-cpi-report-091555133.html">Yahoo Finance</a> · <a href="https://www.thestreet.com/stock-market-today/stock-market-today-dow-jones-sp-500-nasdaq-updates-aug-12-2026">TheStreet</a> · <a href="https://sundayguardianlive.com/business/sp-500-today-why-is-index-up-sp-500-gains-025-to-774746-as-july-cpi-eases-fed-rate-hike-bets-check-latest-market-updates-key-levels-outlook-259873/">Sunday Guardian</a> · <a href="https://www.streetinsider.com/PRNewswire/CISCO+REPORTS+FOURTH+QUARTER+AND+FISCAL+YEAR+2026+EARNINGS/26912724.html">StreetInsider(シスコ決算リリース)</a> · <a href="https://tradingeconomics.com/japan/currency">Trading Economics(ドル円)</a> · <a href="https://www.aljazeera.com/economy/2026/8/10/oil-prices-climb-as-iranian-demands-cloud-outlook-for-strait-of-hormuz">Al Jazeera(ホルムズ)</a><br>
+    ダウ・ラッセルの終値実数は照合中のため騰落率のみ表示。数値は公開ソースに基づく。投資判断はご自身で。
+  </div>
+
+</div></div>
+
+<script>
+(function(){
+  var SCRIPT = [
+    "おはようございます。2026年8月13日、木曜日。米国市場モーニングブリーフです。昨晩、米国8月12日水曜日の取引と、今朝知っておくべきニュースを、およそ10分でお伝えします。",
+    "まず結論から。7月の消費者物価指数は予想通りの鈍化となり、9月の利上げ観測が後退しました。株式は続伸し、S&P500は史上最高値まで、あと10ポイントに迫っています。",
+    "主要指数です。S&P500は0.25%高の、7747.46。8月7日につけた最高値、7757.64が目前です。",
+    "ハイテク中心のナスダック総合は、0.57%高の26596。半導体が相場を牽引し、マイクロン・テクノロジーは6.9%高。ラムリサーチ、アプライド・マテリアルズ、エヌビディアも買われました。",
+    "ダウ平均は0.11%高、小型株のラッセル2000は0.32%高。ドル円は159円20銭近辺。ブレント原油は90ドルに接近しています。",
+    "ここからは、厳選ニュースを5本、背景と含意まで掘り下げて解説します。",
+    "1本目。7月CPI、3.4%への鈍化です。前月比プラス0.1%、前年比3.4%で、6月の3.5%から低下。コア指数も前月比0.2%、前年比2.5%と、すべて市場予想に一致しました。",
+    "ここで押さえるべき背景は、2026年のFRBを巡る議論が、多くの人の直感と逆だということです。論点は、いつ利下げするかではなく、追加利上げが必要か、です。中東情勢によるエネルギー高が春のインフレを再加速させ、タカ派は引き締めを主張してきました。一方で7月の雇用データは弱く、締めすぎれば景気を壊すというジレンマにあります。",
+    "CPI発表前、9月利上げの確率はほぼ50対50でしたが、発表後は据え置き優位に傾きました。予想通りであること、それ自体が最大の安心材料だったわけです。LPLファイナンシャルは、年末までにインフレは2.7%へ減速すると予想しています。",
+    "ただし注意点があります。コアの2.5%は目標の2%より上にあり、そして原油が90ドルに乗ってきています。これが8月分のCPIに反映され始めると、今日の安堵は一ヶ月で巻き戻される可能性があります。",
+    "2本目。そのリスクの震源、ホルムズ海峡です。米国とイランの、海峡通航を巡る合意観測が後退しました。米側の封鎖ラインでは、パナマ船籍のタンカーへの発砲事案も発生。ブレント原油は90ドルに接近しています。",
+    "背景です。今年の対イラン軍事衝突以降、世界の海上輸送原油のおよそ2割が通るこの隘路は、正常に機能していません。3月にはイランの封鎖で原油が100ドルを突破した経緯があり、市場はその再現を警戒しています。代替パイプラインの容量は限られ、迂回は構造的に困難です。",
+    "含意です。エネルギー価格はCPIの最大の変数です。90ドルが定着すれば、インフレは3%台前半で頭打ち、というシナリオが崩れ、9月利上げ論が再燃しかねません。日本から見れば、原油高は円安と輸入物価の二重経路で効いてきます。今朝いちばん監視価値のある価格は、S&P500ではなく、ブレント原油です。",
+    "3本目。AIインフラ、いわゆるネオクラウドの決算ラッシュです。CoreWeaveは赤字縮小で18%高。Nebiusは売上5.82億ドルで16.5%高。スーパー・マイクロも9%高となりました。",
+    "さらに前日には、ビットコイン採掘大手のRiot Platformsが、AnthropicとのあいだでAIデータセンター契約、総額91億ドルを結び、17%の急騰となっています。",
+    "背景です。AI計算需要のボトルネックは、GPUそのものから、電力、土地、冷却へと移りました。電力容量をすでに確保しているマイニング企業が、AIデータセンターへ設備を転用する動きが加速しています。GPUを貸し出すネオクラウド勢が、大手クラウドの容量不足を埋める構図です。",
+    "含意です。AI投資サイクルは終わるどころか、半導体からその周辺、電力、データセンター、ネットワーク機器へと拡散しています。この裾野の広がりが続く限り、AI関連の株価調整は、テーマの終わりではなく、テーマ内の資金回転と読むのが妥当でしょう。",
+    "4本目。引け後に発表された、シスコシステムズの決算です。第4四半期の売上は173億ドルで、前年比18%増。調整後の一株利益は1.22ドルでした。",
+    "注目はAIです。2026年度のAIインフラ受注は累計93億ドルに達し、来期はAIから約75億ドルの売上を見込みます。通期の売上ガイダンスも722億から734億ドルと強気。ネットワーキング受注は40%増で、8四半期連続の2桁成長です。",
+    "背景として、シスコは、AIはGPUだけでは動かない、ということの代表的な受益者です。データセンター内部を繋ぐスイッチやルーターの需要が急増し、株価は年初来61%高。地味な老舗が、今年のAI銘柄の一角に変貌しています。",
+    "含意です。経営陣が強気のガイダンスを出すのは、顧客のAI設備投資が2027年度も衰えない、と見ているシグナルです。AIネットワーキングが、エヌビディアとブロードコムの独壇場ではなくなりつつある点も、競争構造の変化として重要です。",
+    "5本目。Alphabetです。Bloombergが、次期主力AIモデル、Gemini 3.5 Proの開発遅延を報道しました。特にコーディング性能の改善が不発だったとされ、株価は火曜日に約4%下落。時価総額およそ2000億ドルが失われました。",
+    "背景です。OpenAIやMetaとの最前線モデル競争では、数ヶ月の遅延が相対的な地位の低下に直結します。検索、YouTube、地図など、全製品への統合を必要とする組織の複雑さ、そして政府とのAI安全基準を巡る協議も、開発速度の足かせになっていると報じられています。",
+    "含意です。来週のAlphabet決算では、業績の数字よりも、3.5 Proのタイムライン説明が最大の焦点になります。一方で同じ日、半導体株は買われていました。市場はAIを見限ったのではなく、テーマの中で勝ち馬を乗り換えているだけです。ここが2022年型の下落とは決定的に違う点です。",
+    "最後に、この先の注目です。今週残りは、7月の生産者物価指数と消費関連の指標が続きます。CPIが予想通りだった分、次の波乱要因はPPIと原油価格に移ります。",
+    "来週はAlphabetの決算。そして為替は159円台です。7月末の日米協調介入の効果が半分ほど剥落しており、160円台への再接近は、当局の再介入警戒ゾーンに入ります。",
+    "テキスト版には、CNBC PROとWSJの、今朝読む価値のある記事リンクを載せています。以上、米国市場モーニングブリーフでした。良い一日を。"
+  ];
+
+  // ---- ElevenLabs 設定(個人利用・共有禁止) ----
+  var XI_KEY = '';
+  try{ var m=(location.hash||'').match(/[#&]k=([^&]+)/); if(m) XI_KEY=decodeURIComponent(m[1]); }catch(e){}
+  var MODEL = 'eleven_multilingual_v2';
+  var DEFAULT_VOICE = 'EXAVITQu4vr4xnSDxMaL'; // Sarah(女性)フォールバック
+  var API = 'https://api.elevenlabs.io/v1';
+
+  // SCRIPTを1リクエスト約700字のブロックにまとめる(逐次生成・先読み)
+  var CHUNKS = [];
+  (function(){
+    var buf='';
+    SCRIPT.forEach(function(s){
+      if((buf+s).length>700){ if(buf) CHUNKS.push(buf); buf=s; } else { buf+=s; }
+    });
+    if(buf) CHUNKS.push(buf);
+  })();
+
+  var btnPlay=document.getElementById('btnPlay'), btnStop=document.getElementById('btnStop');
+  var selRate=document.getElementById('selRate'), selVoice=document.getElementById('selVoice');
+  var fill=document.getElementById('fill'), now=document.getElementById('now');
+  var audio=new Audio(), cache={}, pending={}, idx=0, playing=false, paused=false;
+
+  function xi(path,opt){
+    opt=opt||{}; var k=XI_KEY||((document.getElementById('xiKey')||{}).value||'').trim();
+    opt.headers=Object.assign({'xi-api-key':k},opt.headers||{});
+    return fetch(API+path,opt);
+  }
+
+  // 音声一覧: 日本語ラベル/名前を優先、次に女性、既定はSarah
+  function scoreVoice(v){
+    var name=(v.name||'').toLowerCase();
+    var lab=v.labels||{};
+    var txt=(name+' '+JSON.stringify(lab)).toLowerCase();
+    var s=0;
+    if(/(japan|japanese|日本|"ja")/.test(txt)) s+=100;
+    if((lab.gender||'').toLowerCase()==='female') s+=10;
+    if(/(middle|30)/.test((lab.age||''))) s+=5;
+    if(v.voice_id===DEFAULT_VOICE) s+=1;
+    return s;
+  }
+  function loadVoices(){
+    xi('/voices').then(function(r){return r.json();}).then(function(d){
+      var vs=(d.voices||[]).slice().sort(function(a,b){return scoreVoice(b)-scoreVoice(a);});
+      selVoice.innerHTML='';
+      vs.forEach(function(v){
+        var o=document.createElement('option');
+        o.value=v.voice_id;
+        var g=(v.labels&&v.labels.gender)?(v.labels.gender==='female'?'女性':'男性'):'';
+        o.textContent=v.name+(g?' · '+g:'');
+        selVoice.appendChild(o);
+      });
+      if(!vs.length){
+        var o=document.createElement('option'); o.value=DEFAULT_VOICE; o.textContent='Sarah · 女性'; selVoice.appendChild(o);
+      }
+    }).catch(function(){
+      var o=document.createElement('option'); o.value=DEFAULT_VOICE; o.textContent='Sarah · 女性'; selVoice.innerHTML=''; selVoice.appendChild(o);
+    });
+  }
+  var keyEl=document.getElementById('xiKey');
+  if(XI_KEY&&keyEl){keyEl.style.display='none';}
+  if(keyEl){keyEl.addEventListener('change',loadVoices);}
+  if(XI_KEY) loadVoices();
+
+  function gen(i){
+    var key=selVoice.value+'|'+i;
+    if(cache[key]) return Promise.resolve(cache[key]);
+    if(pending[key]) return pending[key];
+    pending[key]=xi('/text-to-speech/'+(selVoice.value||DEFAULT_VOICE)+'?output_format=mp3_44100_64',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({text:CHUNKS[i],model_id:MODEL,
+        voice_settings:{stability:0.45,similarity_boost:0.7,style:0.2}})
+    }).then(function(r){
+      if(!r.ok) throw new Error('ElevenLabs API '+r.status);
+      return r.blob();
+    }).then(function(b){
+      cache[key]=URL.createObjectURL(b); delete pending[key]; return cache[key];
+    }).catch(function(e){ delete pending[key]; throw e; });
+    return pending[key];
+  }
+
+  function playChunk(i){
+    if(!playing) return;
+    if(i>=CHUNKS.length){ stopAll(); now.textContent='再生完了'; fill.style.width='100%'; return; }
+    idx=i;
+    now.textContent='生成中… ('+(i+1)+'/'+CHUNKS.length+')';
+    gen(i).then(function(url){
+      if(!playing||idx!==i) return;
+      audio.src=url; audio.playbackRate=parseFloat(selRate.value);
+      now.textContent=CHUNKS[i].slice(0,60)+'…';
+      fill.style.width=(i/CHUNKS.length*100)+'%';
+      audio.play();
+      if(i+1<CHUNKS.length) gen(i+1).catch(function(){}); // 先読み
+    }).catch(function(e){
+      now.textContent='生成エラー: '+e.message+' — ネット接続とAPIキー(残クレジット)を確認してください。';
+      stopAll();
+    });
+  }
+  audio.onended=function(){ if(playing) playChunk(idx+1); };
+  selRate.addEventListener('change',function(){ audio.playbackRate=parseFloat(selRate.value); });
+  selVoice.addEventListener('change',function(){ /* 次回再生から新ボイス */ });
+
+  function stopAll(){
+    playing=false; paused=false; audio.pause();
+    btnPlay.textContent='▶ 再生'; btnStop.disabled=true;
+  }
+  btnPlay.addEventListener('click',function(){
+    if(playing&&!paused){ audio.pause(); paused=true; btnPlay.textContent='▶ 再開'; return; }
+    if(playing&&paused){ audio.play(); paused=false; btnPlay.textContent='∥ 一時停止'; return; }
+    playing=true; paused=false; btnPlay.textContent='∥ 一時停止'; btnStop.disabled=false;
+    playChunk(idx||0);
+  });
+  btnStop.addEventListener('click',function(){
+    stopAll(); idx=0; audio.currentTime=0; fill.style.width='0%'; now.textContent='';
+  });
+})();
+</script>
+</body>
+</html>
