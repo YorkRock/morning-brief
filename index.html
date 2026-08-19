@@ -95,7 +95,7 @@
     </div>
     <div class="pbar"><div class="pbar-fill" id="fill"></div></div>
     <div class="now-reading" id="now"></div>
-    <div class="player-note">再生ボタンでElevenLabsが音声を生成します(初回は数秒待ち)。APIキーはブックマークURLの#k=以降(サーバーに送信されない)か、貼り付け欄から読み込みます。ページには保存されません。</div>
+    <div class="player-note">再生ボタンでElevenLabsが音声を生成します(初回は数秒待ち)。APIキーはブックマークURLの#k=以降(サーバーに送信されない)か、貼り付け欄から読み込みます。ページには保存されません。キー入力後、ボイス一覧(日本語ネイティブ優先)が自動で読み込まれます。</div>
   </div>
 
   <div class="tiles">
@@ -257,7 +257,8 @@
     return s;
   }
   function loadVoices(){
-    xi('/voices').then(function(r){return r.json();}).then(function(d){
+    now.textContent='ボイス一覧を読込中…';
+    xi('/voices').then(function(r){ if(!r.ok) throw new Error('API '+r.status); return r.json(); }).then(function(d){
       var vs=(d.voices||[]).slice().sort(function(a,b){return scoreVoice(b)-scoreVoice(a);});
       selVoice.innerHTML='';
       vs.forEach(function(v){
@@ -270,16 +271,19 @@
       if(!vs.length){
         var o=document.createElement('option'); o.value=DEFAULT_VOICE; o.textContent='Sarah · 女性'; selVoice.appendChild(o);
       }
+      now.textContent='ボイスを読み込みました('+vs.length+'件)';
       var hasJa = vs.length && scoreVoice(vs[0])>=100;
       if(!hasJa) loadLibraryJa();
-    }).catch(function(){
+    }).catch(function(e){
+      now.textContent='ボイス読込エラー: '+e.message+' — APIキーを確認してください。';
       var o=document.createElement('option'); o.value=DEFAULT_VOICE; o.textContent='Sarah · 女性'; selVoice.innerHTML=''; selVoice.appendChild(o);
     });
   }
   // アカウントに日本語ボイスが無い場合、共有ライブラリから日本語ネイティブの女性ボイスを提案
   function loadLibraryJa(){
-    xi('/shared-voices?language=ja&gender=female&page_size=6').then(function(r){return r.json();}).then(function(d){
+    xi('/shared-voices?language=ja&gender=female&page_size=6').then(function(r){ if(!r.ok) throw new Error('API '+r.status); return r.json(); }).then(function(d){
       var vs=d.voices||[]; if(!vs.length) return;
+      now.textContent='日本語ネイティブボイスを'+vs.length+'件追加しました。';
       vs.forEach(function(v,i){
         var o=document.createElement('option');
         o.value=v.voice_id; o.dataset.owner=v.public_owner_id;
@@ -306,7 +310,18 @@
   }
   var keyEl=document.getElementById('xiKey');
   if(XI_KEY&&keyEl){keyEl.style.display='none';}
-  if(keyEl){keyEl.addEventListener('change',loadVoices);}
+  function currentKey(){ return XI_KEY||((keyEl||{}).value||'').trim(); }
+  if(!selVoice.options.length){
+    var o0=document.createElement('option'); o0.value=DEFAULT_VOICE;
+    o0.textContent='ボイス: APIキー入力後に自動読込'; selVoice.appendChild(o0);
+  }
+  var loadT=null;
+  function scheduleLoad(){ clearTimeout(loadT); loadT=setTimeout(function(){ if(currentKey().length>8) loadVoices(); },600); }
+  if(keyEl){
+    keyEl.addEventListener('change',scheduleLoad);
+    keyEl.addEventListener('input',scheduleLoad);
+    keyEl.addEventListener('paste',scheduleLoad);
+  }
   if(XI_KEY) loadVoices();
 
   function gen(i){
