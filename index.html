@@ -277,21 +277,42 @@
     }).catch(function(e){
       now.textContent='ボイス読込エラー: '+e.message+' — APIキーを確認してください。';
       var o=document.createElement('option'); o.value=DEFAULT_VOICE; o.textContent='Sarah · 女性'; selVoice.innerHTML=''; selVoice.appendChild(o);
+      loadLibraryJa();
     });
   }
   // アカウントに日本語ボイスが無い場合、共有ライブラリから日本語ネイティブの女性ボイスを提案
+  function addLibraryOptions(vs){
+    var n=0;
+    vs.forEach(function(v){
+      if(!v.voice_id||!v.public_owner_id) return;
+      var o=document.createElement('option');
+      o.value=v.voice_id; o.dataset.owner=v.public_owner_id;
+      o.textContent=(v.name||'日本語ボイス')+' · 日本語ネイティブ';
+      selVoice.insertBefore(o,selVoice.options[n]||null); n++;
+    });
+    if(n){ selVoice.selectedIndex=0; now.textContent='日本語ネイティブボイスを'+n+'件追加しました。先頭を既定にしています。'; }
+    return n;
+  }
+  function fetchLibrary(q){
+    return xi('/shared-voices?'+q).then(function(r){
+      if(!r.ok) throw new Error('API '+r.status);
+      return r.json();
+    }).then(function(d){ return d.voices||[]; });
+  }
   function loadLibraryJa(){
-    xi('/shared-voices?language=ja&gender=female&page_size=6').then(function(r){ if(!r.ok) throw new Error('API '+r.status); return r.json(); }).then(function(d){
-      var vs=d.voices||[]; if(!vs.length) return;
-      now.textContent='日本語ネイティブボイスを'+vs.length+'件追加しました。';
-      vs.forEach(function(v,i){
-        var o=document.createElement('option');
-        o.value=v.voice_id; o.dataset.owner=v.public_owner_id;
-        o.textContent=v.name+' · 日本語ネイティブ';
-        selVoice.insertBefore(o,selVoice.options[i]||null);
+    now.textContent='日本語ネイティブボイスを検索中…';
+    fetchLibrary('language=ja&gender=female&page_size=6').then(function(vs){
+      if(addLibraryOptions(vs)) return;
+      // 女性指定で0件なら日本語のみで再検索し、ラベルから女性を優先
+      return fetchLibrary('language=ja&page_size=20').then(function(vs2){
+        vs2.sort(function(a,b){ return ((b.gender==='female')?1:0)-((a.gender==='female')?1:0); });
+        if(!addLibraryOptions(vs2.slice(0,6))){
+          now.textContent='ライブラリに日本語ボイスが見つかりませんでした。ElevenLabsサイトのVoice Libraryで日本語ボイスを追加後、再読込してください。';
+        }
       });
-      selVoice.selectedIndex=0;
-    }).catch(function(){});
+    }).catch(function(e){
+      now.textContent='日本語ボイス検索エラー: '+e.message+' — APIキーが読み取り制限付きの可能性。ElevenLabsサイトのVoice Libraryで日本語女性ボイスを一度「Add」してから、このページを再読込してください。';
+    });
   }
   // ライブラリ由来のボイスは初回使用時にアカウントへ追加し、以後は自分のボイスIDで生成する
   var addInFlight=null;
@@ -302,10 +323,10 @@
     addInFlight=xi('/voices/add/'+o.dataset.owner+'/'+o.value,{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({new_name:o.textContent.replace(' · 日本語ネイティブ','')})
-    }).then(function(r){return r.json();}).then(function(d){
+    }).then(function(r){ if(!r.ok) throw new Error('API '+r.status); return r.json(); }).then(function(d){
       if(d&&d.voice_id){o.value=d.voice_id;} delete o.dataset.owner;
       addInFlight=null; return o.value;
-    }).catch(function(){ addInFlight=null; delete o.dataset.owner; return o.value; });
+    }).catch(function(e){ addInFlight=null; now.textContent='ボイス追加エラー: '+e.message+' — 別の日本語ボイスを選ぶか、ElevenLabsサイトから追加してください。'; throw e; });
     return addInFlight;
   }
   var keyEl=document.getElementById('xiKey');
