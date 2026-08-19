@@ -220,7 +220,7 @@
   var XI_KEY = '';
   try{ var m=(location.hash||'').match(/[#&]k=([^&]+)/); if(m) XI_KEY=decodeURIComponent(m[1]); }catch(e){}
   var MODEL = 'eleven_multilingual_v2';
-  var DEFAULT_VOICE = 'EXAVITQu4vr4xnSDxMaL'; // Sarah(女性)フォールバック
+  var DEFAULT_VOICE = 'EXAVITQu4vr4xnSDxMaL'; // Sarah(英語話者)最終フォールバック。日本語ネイティブ女性ボイスを優先取得する
   var API = 'https://api.elevenlabs.io/v1';
 
   // SCRIPTを1リクエスト約700字のブロックにまとめる(逐次生成・先読み)
@@ -270,9 +270,39 @@
       if(!vs.length){
         var o=document.createElement('option'); o.value=DEFAULT_VOICE; o.textContent='Sarah · 女性'; selVoice.appendChild(o);
       }
+      var hasJa = vs.length && scoreVoice(vs[0])>=100;
+      if(!hasJa) loadLibraryJa();
     }).catch(function(){
       var o=document.createElement('option'); o.value=DEFAULT_VOICE; o.textContent='Sarah · 女性'; selVoice.innerHTML=''; selVoice.appendChild(o);
     });
+  }
+  // アカウントに日本語ボイスが無い場合、共有ライブラリから日本語ネイティブの女性ボイスを提案
+  function loadLibraryJa(){
+    xi('/shared-voices?language=ja&gender=female&page_size=6').then(function(r){return r.json();}).then(function(d){
+      var vs=d.voices||[]; if(!vs.length) return;
+      vs.forEach(function(v,i){
+        var o=document.createElement('option');
+        o.value=v.voice_id; o.dataset.owner=v.public_owner_id;
+        o.textContent=v.name+' · 日本語ネイティブ';
+        selVoice.insertBefore(o,selVoice.options[i]||null);
+      });
+      selVoice.selectedIndex=0;
+    }).catch(function(){});
+  }
+  // ライブラリ由来のボイスは初回使用時にアカウントへ追加し、以後は自分のボイスIDで生成する
+  var addInFlight=null;
+  function ensureVoice(){
+    var o=selVoice.options[selVoice.selectedIndex];
+    if(!o||!o.dataset.owner) return Promise.resolve(selVoice.value||DEFAULT_VOICE);
+    if(addInFlight) return addInFlight;
+    addInFlight=xi('/voices/add/'+o.dataset.owner+'/'+o.value,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({new_name:o.textContent.replace(' · 日本語ネイティブ','')})
+    }).then(function(r){return r.json();}).then(function(d){
+      if(d&&d.voice_id){o.value=d.voice_id;} delete o.dataset.owner;
+      addInFlight=null; return o.value;
+    }).catch(function(){ addInFlight=null; delete o.dataset.owner; return o.value; });
+    return addInFlight;
   }
   var keyEl=document.getElementById('xiKey');
   if(XI_KEY&&keyEl){keyEl.style.display='none';}
@@ -280,21 +310,23 @@
   if(XI_KEY) loadVoices();
 
   function gen(i){
-    var key=selVoice.value+'|'+i;
-    if(cache[key]) return Promise.resolve(cache[key]);
-    if(pending[key]) return pending[key];
-    pending[key]=xi('/text-to-speech/'+(selVoice.value||DEFAULT_VOICE)+'?output_format=mp3_44100_64',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({text:CHUNKS[i],model_id:MODEL,
-        voice_settings:{stability:0.45,similarity_boost:0.7,style:0.2}})
-    }).then(function(r){
-      if(!r.ok) throw new Error('ElevenLabs API '+r.status);
-      return r.blob();
-    }).then(function(b){
-      cache[key]=URL.createObjectURL(b); delete pending[key]; return cache[key];
-    }).catch(function(e){ delete pending[key]; throw e; });
-    return pending[key];
+    return ensureVoice().then(function(vid){
+      var key=vid+'|'+i;
+      if(cache[key]) return cache[key];
+      if(pending[key]) return pending[key];
+      pending[key]=xi('/text-to-speech/'+(vid||DEFAULT_VOICE)+'?output_format=mp3_44100_64',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({text:CHUNKS[i],model_id:MODEL,
+          voice_settings:{stability:0.5,similarity_boost:0.7,style:0.0}})
+      }).then(function(r){
+        if(!r.ok) throw new Error('ElevenLabs API '+r.status);
+        return r.blob();
+      }).then(function(b){
+        cache[key]=URL.createObjectURL(b); delete pending[key]; return cache[key];
+      }).catch(function(e){ delete pending[key]; throw e; });
+      return pending[key];
+    });
   }
 
   function playChunk(i){
